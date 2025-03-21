@@ -141,6 +141,7 @@ pub enum CryptoError {
     InvalidSignature,
     UnsupportedAeadAlgorithm,
     UnsupportedKdf,
+    UnsupportedKem,
     InvalidLength,
     UnsupportedHashAlgorithm,
     SignatureEncodingError,
