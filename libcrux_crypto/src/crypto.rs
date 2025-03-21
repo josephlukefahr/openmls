@@ -52,6 +52,7 @@ impl OpenMlsCrypto for CryptoProvider {
 
         match ciphersuite.hash_algorithm() {
             HashType::Sha2_256 | HashType::Sha2_384 | HashType::Sha2_512 => Ok(()),
+            _ => Err(CryptoError::UnsupportedHashAlgorithm),
         }?;
 
         match ciphersuite.hpke_aead_algorithm() {
@@ -112,6 +113,7 @@ impl OpenMlsCrypto for CryptoProvider {
             HashType::Sha2_256 => libcrux::digest::sha2_256(data).to_vec(),
             HashType::Sha2_384 => libcrux::digest::sha2_384(data).to_vec(),
             HashType::Sha2_512 => libcrux::digest::sha2_512(data).to_vec(),
+            _ => panic!("cannot extend ciphersuites without adding an enum item here!"),
         };
 
         Ok(out)
@@ -346,6 +348,7 @@ fn hkdf_alg(hash_type: HashType) -> libcrux::hkdf::Algorithm {
         HashType::Sha2_256 => libcrux::hkdf::Algorithm::Sha256,
         HashType::Sha2_384 => libcrux::hkdf::Algorithm::Sha384,
         HashType::Sha2_512 => libcrux::hkdf::Algorithm::Sha512,
+        _ => panic!("cannot extend ciphersuites without adding an enum item here!"),
     }
 }
 
@@ -369,6 +372,7 @@ fn aead_key(alg: AeadType, key: &[u8]) -> Result<libcrux::aead::Key, CryptoError
                 key.try_into().map_err(|_| CryptoError::InvalidLength)?;
             libcrux::aead::Key::Chacha20Poly1305(libcrux::aead::Chacha20Key(key))
         }
+        _ => panic!("cannot extend ciphersuites without adding an enum item here!"),
     };
 
     Ok(key)
@@ -424,6 +428,7 @@ fn hpke_kdf(kdf: HpkeKdfType) -> libcrux::hpke::kdf::KDF {
         HpkeKdfType::HkdfSha256 => libcrux::hpke::kdf::KDF::HKDF_SHA256,
         HpkeKdfType::HkdfSha384 => libcrux::hpke::kdf::KDF::HKDF_SHA384,
         HpkeKdfType::HkdfSha512 => libcrux::hpke::kdf::KDF::HKDF_SHA512,
+        _ => panic!("cannot extend ciphersuites without adding an enum item here!"),
     }
 }
 
@@ -445,6 +450,7 @@ fn hpke_aead(aead: HpkeAeadType) -> libcrux::hpke::aead::AEAD {
         HpkeAeadType::AesGcm256 => CruxAead::AES_256_GCM,
         HpkeAeadType::ChaCha20Poly1305 => CruxAead::ChaCha20Poly1305,
         HpkeAeadType::Export => CruxAead::Export_only,
+        _ => panic!("cannot extend ciphersuites without adding an enum item here!"),
     }
 }
 

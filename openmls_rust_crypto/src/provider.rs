@@ -68,6 +68,7 @@ fn kdf_mode(kdf: HpkeKdfType) -> hpke_types::KdfAlgorithm {
         HpkeKdfType::HkdfSha256 => hpke_types::KdfAlgorithm::HkdfSha256,
         HpkeKdfType::HkdfSha384 => hpke_types::KdfAlgorithm::HkdfSha384,
         HpkeKdfType::HkdfSha512 => hpke_types::KdfAlgorithm::HkdfSha512,
+        _ => panic!("cannot extend ciphersuites without adding an enum item here!"),
     }
 }
 
@@ -78,6 +79,7 @@ fn aead_mode(aead: HpkeAeadType) -> hpke_types::AeadAlgorithm {
         HpkeAeadType::AesGcm256 => hpke_types::AeadAlgorithm::Aes256Gcm,
         HpkeAeadType::ChaCha20Poly1305 => hpke_types::AeadAlgorithm::ChaCha20Poly1305,
         HpkeAeadType::Export => hpke_types::AeadAlgorithm::HpkeExport,
+        _ => panic!("cannot extend ciphersuites without adding an enum item here!"),
     }
 }
 
@@ -104,11 +106,12 @@ impl OpenMlsCrypto for RustCrypto {
         hash_type: openmls_traits::types::HashType,
         salt: &[u8],
         ikm: &[u8],
-    ) -> Result<SecretVLBytes, openmls_traits::types::CryptoError> {
+    ) -> Result<SecretVLBytes, CryptoError> {
         match hash_type {
             HashType::Sha2_256 => Ok(Hkdf::<Sha256>::extract(Some(salt), ikm).0.as_slice().into()),
             HashType::Sha2_384 => Ok(Hkdf::<Sha384>::extract(Some(salt), ikm).0.as_slice().into()),
             HashType::Sha2_512 => Ok(Hkdf::<Sha512>::extract(Some(salt), ikm).0.as_slice().into()),
+            _ => Err(CryptoError::UnsupportedHashAlgorithm),
         }
     }
 
@@ -118,7 +121,7 @@ impl OpenMlsCrypto for RustCrypto {
         prk: &[u8],
         info: &[u8],
         okm_len: usize,
-    ) -> Result<SecretVLBytes, openmls_traits::types::CryptoError> {
+    ) -> Result<SecretVLBytes, CryptoError> {
         match hash_type {
             HashType::Sha2_256 => {
                 let hkdf = Hkdf::<Sha256>::from_prk(prk)
@@ -144,6 +147,7 @@ impl OpenMlsCrypto for RustCrypto {
                     .map_err(|_| CryptoError::HkdfOutputLengthInvalid)?;
                 Ok(okm.into())
             }
+            _ => Err(CryptoError::UnsupportedHashAlgorithm),
         }
     }
 
@@ -151,11 +155,12 @@ impl OpenMlsCrypto for RustCrypto {
         &self,
         hash_type: openmls_traits::types::HashType,
         data: &[u8],
-    ) -> Result<Vec<u8>, openmls_traits::types::CryptoError> {
+    ) -> Result<Vec<u8>, CryptoError> {
         match hash_type {
             HashType::Sha2_256 => Ok(Sha256::digest(data).as_slice().into()),
             HashType::Sha2_384 => Ok(Sha384::digest(data).as_slice().into()),
             HashType::Sha2_512 => Ok(Sha512::digest(data).as_slice().into()),
+            _ => Err(CryptoError::UnsupportedHashAlgorithm),
         }
     }
 
@@ -190,6 +195,7 @@ impl OpenMlsCrypto for RustCrypto {
                     .map(|r| r.as_slice().into())
                     .map_err(|_| CryptoError::CryptoLibraryError)
             }
+            _ => Err(CryptoError::UnsupportedAeadAlgorithm),
         }
     }
 
@@ -224,6 +230,7 @@ impl OpenMlsCrypto for RustCrypto {
                     .map(|r| r.as_slice().into())
                     .map_err(|_| CryptoError::AeadDecryptionError)
             }
+            _ => Err(CryptoError::UnsupportedAeadAlgorithm),
         }
     }
 
