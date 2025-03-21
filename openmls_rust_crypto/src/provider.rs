@@ -59,6 +59,7 @@ fn kem_mode(kem: HpkeKemType) -> hpke_types::KemAlgorithm {
         HpkeKemType::XWingKemDraft2 => {
             unimplemented!("XWingKemDraft1 is not supported by the RustCrypto provider.")
         }
+        _ => panic!("cannot extend ciphersuites without adding an enum item here!"),
     }
 }
 

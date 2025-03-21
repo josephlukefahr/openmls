@@ -186,6 +186,9 @@ pub enum HpkeKemType {
     /// DH KEM on x25519
     DhKem25519 = 0x0020,
 
+    /// DH KEM on x25519, Ascon-based HKDF
+    DhKem25519a = 0x0101,
+
     /// DH KEM on x448
     DhKem448 = 0x0021,
 
@@ -391,7 +394,7 @@ pub enum Ciphersuite {
     MLS_256_XWING_CHACHA20POLY1305_SHA256_Ed25519 = 0x004D,
 
     /// DHKEM x25519 | Ascon-AEAD 128 | Ascon-Hash 256 | Ed25519
-    MLS_128_DHKEMX25519_ASCONAEAD128_ASCONHASH256_ED25519 = 0x0101,
+    MLS_128_DHKEMX25519A_ASCONAEAD128_ASCONHASH256_ED25519 = 0x0101,
 }
 
 impl core::fmt::Display for Ciphersuite {
@@ -428,7 +431,7 @@ impl TryFrom<u16> for Ciphersuite {
             0x0006 => Ok(Ciphersuite::MLS_256_DHKEMX448_CHACHA20POLY1305_SHA512_Ed448),
             0x0007 => Ok(Ciphersuite::MLS_256_DHKEMP384_AES256GCM_SHA384_P384),
             0x004D => Ok(Ciphersuite::MLS_256_XWING_CHACHA20POLY1305_SHA256_Ed25519),
-            0x0101 => Ok(Ciphersuite::MLS_128_DHKEMX25519_ASCONAEAD128_ASCONHASH256_ED25519),
+            0x0101 => Ok(Ciphersuite::MLS_128_DHKEMX25519A_ASCONAEAD128_ASCONHASH256_ED25519),
             _ => Err(Self::Error::DecodingError(format!(
                 "{v} is not a valid ciphersuite value"
             ))),
@@ -491,7 +494,7 @@ impl Ciphersuite {
             Ciphersuite::MLS_256_DHKEMX448_AES256GCM_SHA512_Ed448
             | Ciphersuite::MLS_256_DHKEMP521_AES256GCM_SHA512_P521
             | Ciphersuite::MLS_256_DHKEMX448_CHACHA20POLY1305_SHA512_Ed448 => HashType::Sha2_512,
-            Ciphersuite::MLS_128_DHKEMX25519_ASCONAEAD128_ASCONHASH256_ED25519 => {
+            Ciphersuite::MLS_128_DHKEMX25519A_ASCONAEAD128_ASCONHASH256_ED25519 => {
                 HashType::AsconHash256
             }
         }
@@ -502,7 +505,7 @@ impl Ciphersuite {
     pub const fn signature_algorithm(&self) -> SignatureScheme {
         match self {
             Ciphersuite::MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519
-            | Ciphersuite::MLS_128_DHKEMX25519_ASCONAEAD128_ASCONHASH256_ED25519
+            | Ciphersuite::MLS_128_DHKEMX25519A_ASCONAEAD128_ASCONHASH256_ED25519
             | Ciphersuite::MLS_128_DHKEMX25519_CHACHA20POLY1305_SHA256_Ed25519
             | Ciphersuite::MLS_256_XWING_CHACHA20POLY1305_SHA256_Ed25519 => {
                 SignatureScheme::ED25519
@@ -537,7 +540,7 @@ impl Ciphersuite {
             Ciphersuite::MLS_256_DHKEMX448_AES256GCM_SHA512_Ed448
             | Ciphersuite::MLS_256_DHKEMP521_AES256GCM_SHA512_P521
             | Ciphersuite::MLS_256_DHKEMP384_AES256GCM_SHA384_P384 => AeadType::Aes256Gcm,
-            Ciphersuite::MLS_128_DHKEMX25519_ASCONAEAD128_ASCONHASH256_ED25519 => {
+            Ciphersuite::MLS_128_DHKEMX25519A_ASCONAEAD128_ASCONHASH256_ED25519 => {
                 AeadType::AsconAead128
             }
         }
@@ -557,7 +560,7 @@ impl Ciphersuite {
             | Ciphersuite::MLS_256_DHKEMX448_CHACHA20POLY1305_SHA512_Ed448 => {
                 HpkeKdfType::HkdfSha512
             }
-            Ciphersuite::MLS_128_DHKEMX25519_ASCONAEAD128_ASCONHASH256_ED25519 => {
+            Ciphersuite::MLS_128_DHKEMX25519A_ASCONAEAD128_ASCONHASH256_ED25519 => {
                 HpkeKdfType::HkdfAsconHash256
             }
         }
@@ -568,9 +571,11 @@ impl Ciphersuite {
     pub const fn hpke_kem_algorithm(&self) -> HpkeKemType {
         match self {
             Ciphersuite::MLS_128_DHKEMX25519_AES128GCM_SHA256_Ed25519
-            | Ciphersuite::MLS_128_DHKEMX25519_ASCONAEAD128_ASCONHASH256_ED25519
             | Ciphersuite::MLS_128_DHKEMX25519_CHACHA20POLY1305_SHA256_Ed25519 => {
                 HpkeKemType::DhKem25519
+            }
+            Ciphersuite::MLS_128_DHKEMX25519A_ASCONAEAD128_ASCONHASH256_ED25519 => {
+                HpkeKemType::DhKem25519a
             }
             Ciphersuite::MLS_128_DHKEMP256_AES128GCM_SHA256_P256 => HpkeKemType::DhKemP256,
             Ciphersuite::MLS_256_DHKEMX448_AES256GCM_SHA512_Ed448
@@ -599,7 +604,7 @@ impl Ciphersuite {
             Ciphersuite::MLS_256_DHKEMX448_CHACHA20POLY1305_SHA512_Ed448 => {
                 HpkeAeadType::ChaCha20Poly1305
             }
-            Ciphersuite::MLS_128_DHKEMX25519_ASCONAEAD128_ASCONHASH256_ED25519 => {
+            Ciphersuite::MLS_128_DHKEMX25519A_ASCONAEAD128_ASCONHASH256_ED25519 => {
                 HpkeAeadType::AsconAead128
             }
         }
