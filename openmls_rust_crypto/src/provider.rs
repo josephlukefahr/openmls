@@ -106,7 +106,7 @@ impl OpenMlsCrypto for RustCrypto {
         hash_type: openmls_traits::types::HashType,
         salt: &[u8],
         ikm: &[u8],
-    ) -> Result<SecretVLBytes, CryptoError> {
+    ) -> Result<SecretVLBytes, openmls_traits::types::CryptoError> {
         match hash_type {
             HashType::Sha2_256 => Ok(Hkdf::<Sha256>::extract(Some(salt), ikm).0.as_slice().into()),
             HashType::Sha2_384 => Ok(Hkdf::<Sha384>::extract(Some(salt), ikm).0.as_slice().into()),
@@ -121,7 +121,7 @@ impl OpenMlsCrypto for RustCrypto {
         prk: &[u8],
         info: &[u8],
         okm_len: usize,
-    ) -> Result<SecretVLBytes, CryptoError> {
+    ) -> Result<SecretVLBytes, openmls_traits::types::CryptoError> {
         match hash_type {
             HashType::Sha2_256 => {
                 let hkdf = Hkdf::<Sha256>::from_prk(prk)
@@ -155,7 +155,7 @@ impl OpenMlsCrypto for RustCrypto {
         &self,
         hash_type: openmls_traits::types::HashType,
         data: &[u8],
-    ) -> Result<Vec<u8>, CryptoError> {
+    ) -> Result<Vec<u8>, openmls_traits::types::CryptoError> {
         match hash_type {
             HashType::Sha2_256 => Ok(Sha256::digest(data).as_slice().into()),
             HashType::Sha2_384 => Ok(Sha384::digest(data).as_slice().into()),
