@@ -381,7 +381,7 @@ fn aead_key(alg: AeadType, key: &[u8]) -> Result<libcrux::aead::Key, CryptoError
 fn sig(alg: SignatureScheme, sig: &[u8]) -> Result<libcrux::signature::Signature, CryptoError> {
     match alg {
         SignatureScheme::ECDSA_SECP256R1_SHA256 => {
-            let decoded: [u8; 64] = der_decode(sig)?
+            let decoded: [u8; 64] = sig
                 .try_into()
                 .map_err(|_| CryptoError::InvalidSignature)?;
 
