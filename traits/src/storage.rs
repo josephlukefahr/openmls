@@ -605,6 +605,7 @@ pub mod traits {
     pub trait KeyPackage<const VERSION: u16>: Entity<VERSION> {}
     pub trait MlsGroupJoinConfig<const VERSION: u16>: Entity<VERSION> {}
     pub trait LeafNode<const VERSION: u16>: Entity<VERSION> {}
+    pub trait Credential<const VERSION: u16>: Entity<VERSION> {}
 
     // traits for types that implement both
     pub trait ProposalRef<const VERSION: u16>: Entity<VERSION> + Key<VERSION> {}
