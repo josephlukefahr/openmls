@@ -80,6 +80,7 @@ impl Entity<CURRENT_VERSION> for TreeSync {}
 impl traits::TreeSync<CURRENT_VERSION> for TreeSync {}
 
 impl Key<CURRENT_VERSION> for GroupId {}
+impl Entity<CURRENT_VERSION> for GroupId {}
 impl traits::GroupId<CURRENT_VERSION> for GroupId {}
 
 impl Key<CURRENT_VERSION> for ProposalRef {}
