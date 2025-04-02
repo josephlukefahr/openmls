@@ -24,7 +24,6 @@
 
 use std::io::{Read, Write};
 
-use openmls_traits::storage::{traits, Entity, CURRENT_VERSION};
 use serde::{Deserialize, Serialize};
 use tls_codec::{
     Deserialize as TlsDeserializeTrait, DeserializeBytes, Error, Serialize as TlsSerializeTrait,
@@ -232,11 +231,6 @@ impl Credential {
         T::tls_deserialize_exact(&self.serialized_credential_content)
     }
 }
-
-impl Entity<CURRENT_VERSION> for Credential {}
-
-impl traits::Credential<CURRENT_VERSION> for Credential {}
-
 
 /// Basic Credential.
 ///

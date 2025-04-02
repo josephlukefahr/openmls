@@ -581,6 +581,7 @@ pub mod traits {
     use super::{Entity, Key};
 
     // traits for keys, one per data type
+    pub trait GroupId<const VERSION: u16>: Key<VERSION> {}
     pub trait SignaturePublicKey<const VERSION: u16>: Key<VERSION> {}
     pub trait HashReference<const VERSION: u16>: Key<VERSION> {}
     pub trait PskId<const VERSION: u16>: Key<VERSION> {}
@@ -604,11 +605,9 @@ pub mod traits {
     pub trait KeyPackage<const VERSION: u16>: Entity<VERSION> {}
     pub trait MlsGroupJoinConfig<const VERSION: u16>: Entity<VERSION> {}
     pub trait LeafNode<const VERSION: u16>: Entity<VERSION> {}
-    pub trait Credential<const VERSION: u16>: Entity<VERSION> {}
 
     // traits for types that implement both
     pub trait ProposalRef<const VERSION: u16>: Entity<VERSION> + Key<VERSION> {}
-    pub trait GroupId<const VERSION: u16>: Entity<VERSION> + Key<VERSION> {}
 }
 // ANCHOR_END: traits
 
