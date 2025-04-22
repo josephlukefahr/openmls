@@ -15,7 +15,6 @@ use crate::{
     framing::mls_content_in::FramedContentIn,
     tree::{secret_tree::SecretType, sender_ratchet::SenderRatchetConfiguration},
 };
-
 use super::*;
 
 /// `PrivateMessage` is the framing struct for an encrypted `PublicMessage`.
@@ -34,7 +33,7 @@ use super::*;
 /// } PrivateMessage;
 /// ```
 #[derive(
-    Debug, PartialEq, Eq, Clone, TlsSerialize, TlsSize, TlsDeserialize, TlsDeserializeBytes,
+    Debug, PartialEq, Eq, Clone, TlsSerialize, TlsSize, TlsDeserialize, TlsDeserializeBytes, serde::Serialize, serde::Deserialize
 )]
 pub struct PrivateMessageIn {
     group_id: GroupId,
