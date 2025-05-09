@@ -175,7 +175,7 @@ impl MlsMessageIn {
 /// Enum containing a message for use with `process_message` and an
 /// [`MlsGroup`]. Both [`PublicMessage`] and [`PrivateMessage`] implement
 /// [`Into<ProtocolMessage>`].
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize, PartialEq)]
 pub enum ProtocolMessage {
     /// A [`ProtocolMessage`] containing a [`PrivateMessage`].
     PrivateMessage(PrivateMessageIn),
